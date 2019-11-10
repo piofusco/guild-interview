@@ -9,20 +9,14 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      - run:
-          name: Setup CF CLI
-          command: |
-            curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
-            sudo dpkg -i cf-cli_amd64.deb
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: gradle dependencies
+            - gradle-cache-{{ checksum "build.gradle" }}
+            - gradle-cache-
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: gradle-cache-{{ checksum "build.gradle" }}
   unit_tests:
     docker:
       - image: circleci/openjdk:8-jdk
@@ -33,6 +27,10 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew build
+      - save_cache:
+          paths:
+            - build/libs
+          key: jar-cache-{{ checksum "guild-interview-0.0.1-SNAPSHOT.jar" }}
   deploy:
     docker:
       - image: circleci/openjdk:8-jdk
@@ -41,8 +39,18 @@ jobs:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
     steps:
-      - run: cf login -a https://donotuseapi.run.pivotal.io -u "$CF_USER" -p "$CF_PASSWORD"
-      - run: cf push guild
+      - checkout
+      - restore_cache:
+          keys:
+            - jar-cache-{{ checksum "guild-interview-0.0.1-SNAPSHOT.jar" }}
+            - jar-cache-
+      - run:
+          name: Setup CF CLI & Deploy
+          command: |
+            curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+            sudo dpkg -i cf-cli_amd64.deb
+            cf login -a https://donotuseapi.run.pivotal.io -u "$CF_USER" -p "$CF_PASSWORD"
+            cf push guild -p build/libs/guild-interview-0.0.1-SNAPSHOT.jar
 workflows:
   version: 2
   build_test_deploy:
