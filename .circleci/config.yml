@@ -49,8 +49,8 @@ workflows:
     jobs:
       - dependencies
       - unit_tests:
-        requires:
-        - dependencies
+          requires:
+          - dependencies
       - deploy:
           requires:
             - unit_tests
