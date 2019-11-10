@@ -1,23 +1,28 @@
 version: 2
 jobs:
-  build:
+  unit_tests:
     docker:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
-
     environment:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: gradle dependencies
+      - run: ./gradlew build
       - save_cache:
           paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
-      - run: gradle test
+            - build/libs/guild-interview-0.0.1-SNAPSHOT.jar
+          key: jar-cache-{{ checksum "build/libs/guild-interview-0.0.1-SNAPSHOT.jar" }}
+      - run:
+          name: Setup CF CLI & Deploy
+          command: |
+            curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+            sudo dpkg -i cf-cli_amd64.deb
+      - run: cf login -a https://donotuseapi.run.pivotal.io -u "$CF_USER" -p "$CF_PASSWORD"
+      - run: cf push guild -p build/libs/guild-interview-0.0.1-SNAPSHOT.jar
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - unit_tests
