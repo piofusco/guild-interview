@@ -45,6 +45,7 @@ jobs:
       - run: cf push guild
   workflows:
     version: 2
+    build_test_deploy:
       jobs:
         - dependencies
         - unit_tests:
