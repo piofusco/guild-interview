@@ -1,5 +1,6 @@
 package io.piofusco.guildinterview
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -23,7 +25,7 @@ class MessagesControllerTest {
     @TestConfiguration
     class ControllerTestConfig {
         @Bean
-        fun mockMessagesService() = mockk<MessagesService>()
+        fun mockMessagesService() = mockk<MessagesService>(relaxed = true)
     }
 
     @Autowired
@@ -31,6 +33,9 @@ class MessagesControllerTest {
 
     @Autowired
     lateinit var subject: MessagesController
+
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     private lateinit var mockMvc: MockMvc
 
@@ -43,7 +48,7 @@ class MessagesControllerTest {
 
     @Test
     fun `GET message should return ALL messages`() {
-        val messages = listOf<MessageDTO>(
+        val messages = listOf(
                 MessageDTO(content = "message 1"),
                 MessageDTO(content = "message 2"),
                 MessageDTO(content = "message 3"),
@@ -63,5 +68,20 @@ class MessagesControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[4].content", equalTo(messages[4].content)))
 
         verify { mockMessagesService.getMessages() }
+    }
+
+    @Test
+    fun `POST message should update messages table with new message entry`() {
+        val messageToPost = MessageDTO(content = "first posted message")
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/messages")
+                        .content(objectMapper.writeValueAsString(messageToPost))
+                        .contentType(MediaType.APPLICATION_JSON)
+
+        )
+                .andExpect(MockMvcResultMatchers.status().isCreated)
+
+        verify { mockMessagesService.createMessage(messageToPost) }
     }
 }
