@@ -26,8 +26,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.postgresql:postgresql")
+    compile("org.flywaydb:flyway-core")
+    compile("org.postgresql:postgresql")
 
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.3.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
