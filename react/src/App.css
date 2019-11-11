@@ -1,0 +1,11 @@
+* {
+  font-family: Roboto, sans-serif;
+}
+
+.form {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  position: fixed;
+  width: 100%;
+}
