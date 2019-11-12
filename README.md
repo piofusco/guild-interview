@@ -1,10 +1,11 @@
-# Interview for Guild Education
-
-
+# Interview for Guild Education - many hours later...
 
 ## Dependencies
+- Frontend built with React + Material UI
+- Backend built with Spring/Kotlin
+- Database in PostgreSQL
 
-### Postgres
+### Postgres setup
 ```
 brew install postgresql@10
 createdb postgres
@@ -12,14 +13,16 @@ createdb guild
 createuser -U postgres guild_user
 ```
 
-
-
 ## Tests
 
-Running
+Running the journey tests, within the `acceptance` folder, run `npx cypress open` (ensure frontend/backend are running)
 
-Build the application: `./gradlew build -x test`
+Running the javascript tests, within the `react` folder, run `npm test`
 
-## Deploy
+Running the API tests, run `./gradlew build`
 
-Deploy the application: `cf push guild -p build/libs/*.jar`
+## Running the app
+
+Frontend: within the `react` folder, run `npm start`
+
+Backend: `./gradlew bootrun`

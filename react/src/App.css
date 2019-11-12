@@ -1,9 +1,40 @@
 * {
   font-family: Roboto, sans-serif;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+body {
+  background-color: darkgrey;
+}
+
+.message-list {
+  bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-list__message {
+  margin: 0.5rem;
+  display: flex;
+}
+
+.message-list__content {
+  margin: 0.5rem;
+}
+
+.message-list__content--left {
+  text-align: left;
+}
+
+.message-list__content--right {
+  text-align: right;
 }
 
 .form {
   align-items: center;
+  background-color: white;
+  border-radius: 5px;
   bottom: 0;
   display: flex;
   position: fixed;
