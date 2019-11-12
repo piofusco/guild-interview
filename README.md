@@ -1,12 +1,12 @@
 # Interview for Guild Education - many hours later...
 
-Where did I end up?
+Where did I end up? ✅
 - the user can submit messages and see them displayed in order they were sent
 - added a pretty decent [CI pipeline](https://circleci.com/gh/piofusco/workflows/guild-interview) (CD is broken due - 
 didn't have enough time to properly configure the DB in [PWS](https://guild.cfapps.io/)
 - decent test coverage on both the frontend/backend + acceptance tests
 
-What was left?
+What was left? 😬
 - user(s) can see who posted what message
 
 This would have involved adding basic auth ([and maybe followed something like this](https://www.baeldung.com/spring-security-basic-authentication)) 
@@ -44,13 +44,13 @@ library. The Material stuff looks nice out of the box and saves time.
 - deploying the frontend separately from the backend. With Spring, this simply means React dumps everything into 
 `main/resources/public`, so when the `.jar` boots and the browser navigates to `/` it renders the react app.
 
-## Dependencies
+## 🛠 Dependencies 🛠
 - Frontend built with [React](https://reactjs.org/)
 - Used [Material UI](https://material-ui.com/) for fan
 - Backend built with Spring/Kotlin
 - Database in PostgreSQL
 
-### Postgres setup
+### 💾 Postgres setup 💾
 ```
 brew install postgresql@10
 createdb postgres
@@ -58,7 +58,7 @@ createdb guild
 createuser -U postgres guild_user
 ```
 
-## Tests
+## 🧪 Tests 🧪
 
 Running the [Cypress tests](https://www.cypress.io/), within the `acceptance` folder, run `npx cypress open` (ensure frontend/backend are running)
 
@@ -66,7 +66,7 @@ Running the javascript tests, within the `react` folder, run `npm test`
 
 Running the API tests, run `./gradlew build`
 
-## Running the app
+## ✈️ Running the app ✈️
 
 Frontend: within the `react` folder, run `npm start`
 
